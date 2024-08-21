@@ -11,28 +11,31 @@ extern "C" {
 
 #include "circular_buffer.h"
 
-#define HEAD_POS_SYNC_WORD		0	// 同步字
+#define HEAD_POS_SYNC_WORD	0	// 同步字
 #define HEAD_POS_TOTAL_SIZE 	2	// 所有分片数据的大小（不包括HEAD） //total data length of all pieces
 #define HEAD_POS_TOTAL_PIECES 	4 	// 所有分片的数量
-#define HEAD_POS_P_INDEX 		6 	// 分片序号，从0开始
-#define HEAD_POS_P_LENGTH 		8 	// 当前分片数据的大小
-#define HEAD_SIZE 				12	// 头部大小
-#define PIECE_FIX_SIZE 			(576 - 8 - 20 - 12)UL 	//每个分片数据最大字节数
+#define HEAD_POS_P_INDEX 	6 	// 分片序号，从0开始
+#define HEAD_POS_P_LENGTH 	8 	// 当前分片数据的大小
+#define HEAD_SIZE 		12	// 头部大小
+#define PIECE_FIX_SIZE 		(576 - 8 - 20 - 12)UL 	//每个分片数据最大字节数
 								//此处我们定义为internat MTU - UDP_head - IP_head - 分片头，当然MTU的值也不是固定的
+//#define MTU_DATA_SIZE           (1400)//1500-20-8 //(576-20-8)
+//#define UDP_MAX_PACKET          (MTU_DATA_SIZE)
+//#define UDP_DATA_FNGTH          (0xffff)
 
 
 typedef struct udp_piece
 {
     int recv_pieces;			// 当前已经接收的分片数量
-    int total_size;				// 总数据大小
+    int total_size;			// 总数据大小
     int total_pieces;			// 分片总数量
-    int left;					// 最后一片的大小
-    int piece_size;				// 分片大小
-    int recv_len;				// 接收数据的长度
+    int left;				// 最后一片的大小
+    int piece_size;			// 分片大小
+    int recv_len;			// 接收数据的长度
     uint8_t *recv_buf;			// 保存接收数据
-    uint8_t	*send_ptr;			// 指向发送数据的buffer
+    uint8_t	*send_ptr;		// 指向发送数据的buffer
     uint8_t piece_buf[PIECE_FIX_SIZE+HEAD_SIZE+1];	//单帧的buffer
-    circular_buffer_t *circular_buffer;	// 环形缓存
+    circular_buffer_t *circular_buffer;			// 环形缓存
 }udp_piece_t;
 
 
